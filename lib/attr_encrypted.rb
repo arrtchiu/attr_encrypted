@@ -144,7 +144,9 @@ module AttrEncrypted
       end
 
       define_method("#{attribute}=") do |value|
-        send("#{encrypted_attribute_name}=", encrypt(attribute, value))
+        encrypted_value = encrypt(attribute, value)
+        send("#{encrypted_attribute_name}=", encrypted_value)
+        send(:write_attribute, attribute, encrypted_value) if is_a? ActiveRecord::Base
         instance_variable_set("@#{attribute}", value)
       end
 
